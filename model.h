@@ -17,7 +17,6 @@ class Model : public QObject
     Q_OBJECT
 
 private:
-
     // Stores the sequence pattern for the simon game in this vector
     std::vector<int> sequence;
 
@@ -37,7 +36,6 @@ public:
     explicit Model(QObject *parent = nullptr);
 
 private:
-
     /**
      * Adds a color to the sequence
      */

@@ -7,9 +7,9 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <QAudioOutput>
 #include <QMainWindow>
 #include <QMediaPlayer>
-#include <QAudioOutput>
 #include <QSoundEffect>
 #include "model.h"
 
@@ -32,7 +32,7 @@ public:
      * @param model: Model object to be used
      * @param parent: QObject parent to be used
      */
-    explicit MainWindow(Model* model, QWidget *parent = nullptr);
+    explicit MainWindow(Model *model, QWidget *parent = nullptr);
 
     // Destructor for MainWindow class
     ~MainWindow() override;

@@ -9,11 +9,15 @@
 #include <QTimer>
 
 Model::Model(QObject *parent)
-    : QObject{parent}, playerPos(0), playerTurn(false), flashTime(700)
-    // Sets playerPos to 0, playerTurn to false and sets the starting flash delay to 700
+    : QObject{parent}
+    , playerPos(0)
+    , playerTurn(false)
+    , flashTime(700)
+// Sets playerPos to 0, playerTurn to false and sets the starting flash delay to 700
 {}
 
-void Model::startGame(){
+void Model::startGame()
+{
     sequence.clear(); // Clears seqeuence for new round
 
     playerTurn = false;
@@ -27,35 +31,33 @@ void Model::startGame(){
     computerTurn();
 }
 
-void Model::checkButtonPress(int color){
+void Model::checkButtonPress(int color)
+{
     // If it is NOT the players turn, end the check
-    if (!playerTurn){
+    if (!playerTurn) {
         return;
     }
 
     int sequenceSize = sequence.size();
 
     // If the player clicks the current button on the round, increment and update progress bar
-    if (sequence[playerPos] == color){
-
+    if (sequence[playerPos] == color) {
         playerPos++;
-        emit updatePercentageBar((100 * playerPos)/sequenceSize);
+        emit updatePercentageBar((100 * playerPos) / sequenceSize);
 
         // If player reaches the end of the seqeunce (clicks all buttons correctly) then start the computers turn
-        if (playerPos == sequenceSize){
+        if (playerPos == sequenceSize) {
             playerTurn = false;
             emit enableButtons(false);
 
             // At the end of the sequence, the flash Time is reduced to increase round speed
             // until it reaches 300, where the speed will then remain the same (very fast)
-            if (flashTime > 300){
+            if (flashTime > 300) {
                 flashTime -= 40;
             }
 
             // QTimer, waits to start the computerTurn after the Timer has ended
-            QTimer::singleShot(550, this, [this]() {
-                computerTurn();
-            });
+            QTimer::singleShot(550, this, [this]() { computerTurn(); });
         }
     }
     // If the player presses the wrong button, end the round and send the lose game message
@@ -65,13 +67,15 @@ void Model::checkButtonPress(int color){
     }
 }
 
-void Model::addMove(){
+void Model::addMove()
+{
     // Randomly pick between 0 (red) or 1 (blue) and add it to the sequence
-    int value = QRandomGenerator::global() -> bounded(2);
+    int value = QRandomGenerator::global()->bounded(2);
     sequence.push_back(value);
 }
 
-void Model::computerTurn(){
+void Model::computerTurn()
+{
     playerTurn = false;
     playerPos = 0;
 
@@ -82,26 +86,20 @@ void Model::computerTurn(){
     addMove();
 
     // QTimer which starts the flash seqeuence after a slight delay
-    QTimer::singleShot(400, this, [this]() {
-        flashSequence(0);
-    });
+    QTimer::singleShot(400, this, [this]() { flashSequence(0); });
 }
 
-void Model::flashSequence(int index){
-
+void Model::flashSequence(int index)
+{
     // If the index had passed the size of the sequence, then start the players turn after a delay and return
-    if (index >= (int) sequence.size()){
+    if (index >= (int) sequence.size()) {
         // QTimer which delays the start of the player turn
-        QTimer::singleShot(100, this, [this]() {
-            startPlayerTurn();
-        });
+        QTimer::singleShot(100, this, [this]() { startPlayerTurn(); });
         return;
 
     } else {
-
         // If current seqeuence color is red (0) flash red
-        if (sequence[index] == 0){
-
+        if (sequence[index] == 0) {
             emit flashRedButton();
         }
 
@@ -111,15 +109,12 @@ void Model::flashSequence(int index){
         }
 
         // QTimer which leaves a pause between each flash before going to the next index in the sequence vector
-        QTimer::singleShot(flashTime, this, [this, index]() {
-            flashSequence(index + 1);
-        });
-
+        QTimer::singleShot(flashTime, this, [this, index]() { flashSequence(index + 1); });
     }
 }
 
-
-void Model::startPlayerTurn(){
+void Model::startPlayerTurn()
+{
     playerTurn = true;
     playerPos = 0;
 
