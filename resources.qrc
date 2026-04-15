@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/Sounds">
+        <file>mainSong.mp3</file>
+        <file>loseGame.wav</file>
+    </qresource>
+</RCC>
